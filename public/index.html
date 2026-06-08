@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University History Department Education Culture Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #07192f 0%, #0a1f3a 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(7, 25, 47, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #33e0c4;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #33e0c4;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffca58;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #33e0c4, #2bc4aa);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            color: #07192f;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(51, 224, 196, 0.3);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #ffca58, #f5b942);
+        }
+
+        .main-content {
+            margin-top: 140px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, rgba(51, 224, 196, 0.1), rgba(255, 202, 88, 0.05));
+            border: 1px solid rgba(51, 224, 196, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(51, 224, 196, 0.2);
+            border-color: #33e0c4;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffca58;
+            margin-bottom: 1rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #33e0c4;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, rgba(51, 224, 196, 0.1), rgba(255, 202, 88, 0.05));
+            border: 1px solid rgba(51, 224, 196, 0.3);
+            border-radius: 15px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffca58;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            color: #33e0c4;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            background: rgba(7, 25, 47, 0.8);
+            border: 2px solid rgba(51, 224, 196, 0.3);
+            border-radius: 8px;
+            padding: 0.875rem;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #33e0c4;
+            box-shadow: 0 0 0 3px rgba(51, 224, 196, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #ffca58, #f5b942);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 25px;
+            color: #07192f;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 202, 88, 0.3);
+        }
+
+        .contact-log {
+            background: linear-gradient(135deg, rgba(51, 224, 196, 0.1), rgba(255, 202, 88, 0.05));
+            border: 1px solid rgba(51, 224, 196, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .log-entry {
+            background: rgba(7, 25, 47, 0.6);
+            border: 1px solid rgba(51, 224, 196, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .log-entry:hover {
+            border-color: #33e0c4;
+            transform: translateX(5px);
+        }
+
+        .log-date {
+            color: #ffca58;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .log-title {
+            color: #33e0c4;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .log-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(7, 25, 47, 0.8);
+            border: 2px solid rgba(51, 224, 196, 0.3);
+            border-radius: 25px;
+            padding: 1rem 1.5rem;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #33e0c4;
+            box-shadow: 0 0 0 3px rgba(51, 224, 196, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer {
+            background: rgba(7, 25, 47, 0.95);
+            border-top: 2px solid #33e0c4;
+            padding: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #33e0c4;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #ffca58;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                margin-top: 160px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            background: rgba(7, 25, 47, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            background: rgba(51, 224, 196, 0.2);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #33e0c4, #ffca58);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(7, 25, 47, 0.4);
+            border: 1px solid rgba(51, 224, 196, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .metric-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #33e0c4;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="status-bar">
+            <span>IGM Status: Active</span>
+            <span>System Online</span>
+            <span>Last Updated: <span id="currentTime"></span></span>
+        </div>
+        <nav class="nav">
+            <div class="logo">History Department Tracking System</div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('dashboard')">Dashboard</button>
+                <button class="nav-btn" onclick="showSection('intake')">Data Intake</button>
+                <button class="nav-btn" onclick="showSection('contact')">Contact Log</button>
+                <button class="nav-btn" onclick="showSection('search')">Search & Reports</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section id="dashboard" class="section active">
+            <div class="dashboard">
+                <div class="dashboard-card">
+                    <div class="card-title">Student Engagement</div>
+                    <div class="card-value">2,847</div>
+                    <div class="card-subtitle">Active Participants This Semester</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78%"></div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">Faculty Research Projects</div>
+                    <div class="card-value">47</div>
+                    <div class="card-subtitle">Ongoing Research Initiatives</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">Curriculum Updates</div>
+                    <div class="card-value">23</div>
+                    <div class="card-subtitle">Documentation Entries This Quarter</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">Learning Outcomes</div>
+                    <div class="card-value">89%</div>
+                    <div class="card-subtitle">Target Achievement Rate</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 89%"></div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">Cultural Events</div>
+                    <div class="card-value">156</div>
+                    <div class="card-subtitle">Events Tracked This Year</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 73%"></div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">Assessment Reports</div>
+                    <div class="card-value">34</div>
+                    <div class="card-subtitle">Completed Evaluations</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-number">95%</div>
+                    <div class="metric-label">Student Satisfaction</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">78</div>
+                    <div class="metric-label">Faculty Members</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">12</div>
+                    <div class="metric-label">Active Courses</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">4.7</div>
+                    <div class="metric-label">Average Rating</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="intake" class="section">
+            <div class="form-container">
+                <h2 class="form-title">Education Culture Data Intake Form</h2>
+                <form id="intakeForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Entry Type</label>
+                            <select class="form-select" required>
+                                <option value="">Select Entry Type</option>
+                                <option value="student_engagement">Student Engagement</option>
+                                <option value="faculty_research">Faculty Research</option>
+                                <option value="curriculum_doc">Curriculum Documentation</option>
+                                <option value="outcome_report">Outcome Reporting</option>
+                                <option value="cultural_event">Cultural Event</option>
+                                <option value="assessment">Assessment</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Faculty/Staff Name</label>
+                            <input type="text" class="form-input" placeholder="Enter name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Course/Program</label>
+                            <input type="text" class="form-input" placeholder="Course or program identifier">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Student Count</label>
+                            <input type="number" class="form-input" placeholder="Number of students involved">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Priority Level</label>
+                            <select class="form-select">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value
